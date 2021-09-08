@@ -1,0 +1,23 @@
+{
+  "Values": {
+
+    //Payment
+    "PaymentQueueConnectionString": "UseDevelopmentStorage=true",
+    "PaymentQueueName": "orders",
+
+    //Payment Table
+    "TableName": "orders",
+    "PaymentTableConnectionString": "UseDevelopmentStorage=true",
+
+    //GenerateFile
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "GenerateFileQueueTriggerName": "orders",
+    "BlobStorageConnectionString": "UseDevelopmentStorage=true",
+
+    //MailLincesMail
+    "SendGridApiKey": "key ",
+    "EmailSender": "mail user",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+  },
+  "IsEncrypted": false
+}
