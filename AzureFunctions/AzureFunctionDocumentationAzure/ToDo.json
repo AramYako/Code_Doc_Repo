@@ -1,4 +1,6 @@
 {
   "Todo-1": "Implement logic to store into CosmoDb",
-  "Todo-2": "Implement lookup from cosmo db in inputbinding"
+  "Todo-2": "Implement lookup from cosmo db in inputbinding",
+  "Todo-3": "Implement Azure durable functions",
+  "Todo-4": "Implement ARM template"
 }
