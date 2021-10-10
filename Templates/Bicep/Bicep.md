@@ -2,14 +2,46 @@
 
 [![](https://shell.azure.com/images/launchcloudshell.png "Launch Azure Cloud Shell")](https://shell.azure.com)
 
-## Installation
+# Deployment of an ARM tempplate
 
-### Deployment of an ARM tempplate
-
-Can be deployed to 
-```bash
+### Arm template can be deployed to 
+```
 Resource group
 Subscription
 Management Group
 Tenant
+```
+
+### ARM Template deployment tools
+```
+Azure CLI 
+Azure Powershell
+```
+
+### Process 
+```
+- Powershell/Azure CLI invoked
+- Call Bicep CLI 
+- Convert Bicep to ARM json
+- Call Azure Resource manager
+```
+
+### Good extensions in VS Code 
+```
+- Bicep
+```
+
+## Installation Instructions
+
+### Bicep with Azure CLI
+```
+- az bicep install
+- az bicep upgrade
+- az bicep version
+```
+
+### Bicep with Powershell
+```
+- choco install bicep 
+- choco upgrade bicep
 ```
