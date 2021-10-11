@@ -41,9 +41,8 @@
     "ArchiveBlobContainerName": {
       "value": "service-archive-test"
     },
-
-    "serviceChangeFeedCollectionName": {
-      "value": "service-leases-test"
+    "ServiceDataChangeFeedCollectionName": {
+      "value": "servicedata-leases-test"
     }
   }
 }

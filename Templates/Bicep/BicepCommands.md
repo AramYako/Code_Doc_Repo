@@ -11,6 +11,7 @@ bicep decompile ./template.json
 ``` 
 ### Deploy
 ```
+- az login
  ### Check which is current active subscription
 - az account show --output table
 ### Set current active subscription if needed
@@ -19,4 +20,9 @@ bicep decompile ./template.json
 - az deployment group create -g servicedata-logic-qa -f ./azuredeploy.bicep -p @azuredeploy-test.parameters.json --what-if
 ###Deploy
 - az deployment group create -g servicedata-logic-qa -f ./azuredeploy.bicep -p @azuredeploy-test.parameters.json
+```
+
+### List deployment at a rg 
+```
+- az deployment group list --resource-group
 ```

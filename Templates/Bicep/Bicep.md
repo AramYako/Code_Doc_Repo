@@ -30,6 +30,19 @@ Azure Powershell
 ```
 - Bicep
 ```
+### param types
+```
+string
+int
+bool
+```
+
+### string interpolation
+```
+- param storageAccountName string = 'toylaunch${uniqueString(resourceGrou ().id)}'
+
+```
+
 
 ## Installation Instructions
 
@@ -45,3 +58,4 @@ Azure Powershell
 - choco install bicep 
 - choco upgrade bicep
 ```
+
