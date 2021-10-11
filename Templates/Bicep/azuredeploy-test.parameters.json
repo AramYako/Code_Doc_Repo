@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageAccountName": {
+      "value": "demoservicelogicqa"
+    },
+    "appName": {
+      "value": "demo-service-logic-service-test"
+    },
+    "eventGridTopicName": {
+      "value": "demo-service-eventgrid-test"
+    },
+
+    "hostingPlanName": {
+      "value": "demo-grip-logic-qa-plan"
+    },
+    
+    "hostingPlanResourceGroup": {
+      "value": "demo-grip-logic-qa"
+    },
+
+    "cosmosAccountName": {
+      "value": "demo-service-logic-qa"
+    },
+    "cosmosContainerName": {
+      "value": "demo-service-logic-qa-persistent-test"
+    },
+    "cosmosDatabaseName": {
+      "value": "demo-service-logic-qa-persistent"
+    },
+    "provisionedThroughput": {
+      "value": 400
+    },
+    "keyVaultName": {
+      "value": "service-kv-test"
+    },
+    "environment": {
+      "value": "Test"
+    },
+    "ArchiveBlobContainerName": {
+      "value": "service-archive-test"
+    },
+
+    "serviceChangeFeedCollectionName": {
+      "value": "service-leases-test"
+    }
+  }
+}

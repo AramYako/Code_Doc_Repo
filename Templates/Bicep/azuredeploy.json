@@ -1,0 +1,431 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.613.9944",
+      "templateHash": "4110299839913690285"
+    }
+  },
+  "parameters": {
+    "storageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide a name for the storage account. Use only lower case letters. The name must be unique across Azure."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "resourceGroupLocation": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "appName": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide a name for the function app."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "eventGridTopicName": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide a name for the grid topic."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "functionAppName": {
+      "type": "string",
+      "defaultValue": "[parameters('appName')]",
+      "metadata": {
+        "description": "Function app name"
+      }
+    },
+    "appInsightsName": {
+      "type": "string",
+      "defaultValue": "[parameters('appName')]",
+      "metadata": {
+        "description": "Provide a name for the application insight."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "hostingPlanName": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide a name for the hosting plan."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "hostingPlanResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide a name for the resource group name where the hosting plan to be hosted."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "environment": {
+      "type": "string",
+      "allowedValues": [
+        "Test",
+        "Qa",
+        "Prod"
+      ],
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "keyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide a name for the keyvault."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "cosmosAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide a name for the cosmos account."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "cosmosContainerName": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide a name for the container."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "cosmosDatabaseName": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide a name for the cosmos database plan."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "provisionedThroughput": {
+      "type": "int",
+      "metadata": {
+        "description": "Provide throughput value for cosmos."
+      }
+    },
+    "ServiceDataChangeFeedCollectionName": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide a name for a cosmos container."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "ArchiveBlobContainerName": {
+      "type": "string",
+      "metadata": {
+        "description": "Provide a name for the blob container."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "cosmosConsistencyLevel": {
+      "type": "string",
+      "defaultValue": "Eventual",
+      "metadata": {
+        "description": "Provide a name for the cosmos consistency level."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "throughputPolicy": {
+      "type": "string",
+      "defaultValue": "Autoscale",
+      "allowedValues": [
+        "Autoscale",
+        "Manual"
+      ],
+      "metadata": {
+        "description": "Provide a name for the throughput policy."
+      },
+      "maxLength": 24,
+      "minLength": 3
+    },
+    "storageSKU": {
+      "type": "string",
+      "defaultValue": "Standard_RAGRS",
+      "maxLength": 24,
+      "minLength": 3,
+      "allowedValues": [
+        "Standard_RAGRS"
+      ]
+    }
+  },
+  "functions": [],
+  "variables": {
+    "throughput_Policy": {
+      "Manual": {
+        "Throughput": "[parameters('provisionedThroughput')]"
+      },
+      "Autoscale": {
+        "autoscaleSettings": {
+          "maxThroughput": "[parameters('provisionedThroughput')]"
+        }
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2021-04-01",
+      "name": "[parameters('storageAccountName')]",
+      "location": "[parameters('resourceGroupLocation')]",
+      "sku": {
+        "name": "[parameters('storageSKU')]"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": false,
+        "encryption": {
+          "services": {
+            "file": {
+              "enabled": true
+            },
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        },
+        "accessTier": "Hot"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2021-04-01",
+      "name": "[format('{0}/default', parameters('storageAccountName'))]",
+      "properties": {
+        "cors": {
+          "corsRules": []
+        },
+        "deleteRetentionPolicy": {
+          "enabled": false
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[parameters('appInsightsName')]",
+      "kind": "web",
+      "location": "[parameters('resourceGroupLocation')]",
+      "properties": {
+        "Application_Type": "web"
+      }
+    },
+    {
+      "type": "Microsoft.EventGrid/topics",
+      "apiVersion": "2020-06-01",
+      "name": "[parameters('eventGridTopicName')]",
+      "location": "[parameters('resourceGroupLocation')]"
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2021-01-15",
+      "name": "[parameters('functionAppName')]",
+      "location": "[parameters('resourceGroupLocation')]",
+      "kind": "functionapp",
+      "properties": {
+        "serverFarmId": "[resourceId(parameters('hostingPlanResourceGroup'), 'Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "clientAffinityEnabled": false,
+        "siteConfig": {
+          "alwaysOn": true,
+          "appSettings": [
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName'))).InstrumentationKey]"
+            },
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2021-04-01').keys[0].value)]"
+            },
+            {
+              "name": "AzureWebJobsDashboard",
+              "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2021-04-01').keys[0].value)]"
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~3"
+            },
+            {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "dotnet"
+            },
+            {
+              "name": "Environment",
+              "value": "[parameters('environment')]"
+            },
+            {
+              "name": "azureKeyVault",
+              "value": "[parameters('keyVaultName')]"
+            },
+            {
+              "name": "ServiceDataDatabase",
+              "value": "[parameters('cosmosDatabaseName')]"
+            },
+            {
+              "name": "ServiceDataCollection",
+              "value": "[parameters('cosmosContainerName')]"
+            },
+            {
+              "name": "ServiceDataChangeFeedCollectionName",
+              "value": "[parameters('ServiceDataChangeFeedCollectionName')]"
+            },
+            {
+              "name": "ArchiveBlobContainer",
+              "value": "[parameters('ArchiveBlobContainerName')]"
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]",
+        "[resourceId('Microsoft.EventGrid/topics', parameters('eventGridTopicName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts",
+      "apiVersion": "2021-06-15",
+      "name": "[parameters('cosmosAccountName')]",
+      "location": "[parameters('resourceGroupLocation')]",
+      "properties": {
+        "consistencyPolicy": {
+          "defaultConsistencyLevel": "[parameters('cosmosConsistencyLevel')]"
+        },
+        "locations": [
+          {
+            "locationName": "[parameters('resourceGroupLocation')]"
+          }
+        ],
+        "databaseAccountOfferType": "Standard"
+      }
+    },
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
+      "apiVersion": "2021-06-15",
+      "name": "[format('{0}/{1}', parameters('cosmosAccountName'), parameters('cosmosDatabaseName'))]",
+      "properties": {
+        "resource": {
+          "id": "[parameters('cosmosDatabaseName')]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosAccountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
+      "apiVersion": "2021-04-15",
+      "name": "[format('{0}/{1}/{2}', parameters('cosmosAccountName'), parameters('cosmosDatabaseName'), parameters('cosmosContainerName'))]",
+      "properties": {
+        "resource": {
+          "id": "[parameters('cosmosContainerName')]",
+          "partitionKey": {
+            "paths": [
+              "/vin"
+            ]
+          }
+        },
+        "options": "[variables('throughput_Policy')[parameters('throughputPolicy')]]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', split(format('{0}/{1}', parameters('cosmosAccountName'), parameters('cosmosDatabaseName')), '/')[0], split(format('{0}/{1}', parameters('cosmosAccountName'), parameters('cosmosDatabaseName')), '/')[1])]"
+      ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2019-09-01",
+      "name": "[parameters('keyVaultName')]",
+      "location": "[parameters('resourceGroupLocation')]",
+      "properties": {
+        "tenantId": "[subscription().tenantId]",
+        "enabledForTemplateDeployment": true,
+        "accessPolicies": [
+          {
+            "tenantId": "[subscription().tenantId]",
+            "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2021-01-15', 'full').identity.principalId]",
+            "permissions": {
+              "secrets": [
+                "list",
+                "get"
+              ]
+            }
+          }
+        ],
+        "sku": {
+          "family": "A",
+          "name": "standard"
+        },
+        "createMode": "recover"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2019-09-01",
+      "name": "[format('{0}/StorageConnectionString', parameters('keyVaultName'))]",
+      "properties": {
+        "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2021-04-01').keys[0].value)]",
+        "attributes": {
+          "enabled": true
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2019-09-01",
+      "name": "[format('{0}/cosmosDbKey', parameters('keyVaultName'))]",
+      "properties": {
+        "value": "[listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosAccountName')), '2021-06-15').primaryMasterKey]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosAccountName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2019-09-01",
+      "name": "[format('{0}/ServiceDataEventGridTopicKey', parameters('keyVaultName'))]",
+      "properties": {
+        "value": "[listKeys(resourceId('Microsoft.EventGrid/topics', parameters('eventGridTopicName')), '2020-06-01').primaryMasterKey]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.EventGrid/topics', parameters('eventGridTopicName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+      ]
+    }
+  ]
+}
