@@ -26,3 +26,9 @@ bicep decompile ./template.json
 ```
 - az deployment group list --resource-group
 ```
+
+### Create output
+- output appServiceAppName string = appServiceAppName
+Obs: Important dont output connectionstring, secret stuff like that
+### List deployment at a rg 
+```

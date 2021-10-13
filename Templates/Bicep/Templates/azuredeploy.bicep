@@ -93,6 +93,20 @@ var throughput_Policy = {
   }
 }
 
+//Module
+module appService 'appServiceModule.bicep' = {
+  name: 'appService'
+  params: {
+    location: resourceGroup().location
+    appServiceAppName: appName
+    environmentType: environment
+  }
+}
+
+//Module have output, and we can take this value 
+output appServiceAppHostName string = appService.outputs.appServiceAppHostName
+
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: storageAccountName
   location: resourceGroupLocation

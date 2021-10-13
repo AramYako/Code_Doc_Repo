@@ -2,6 +2,14 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "sqlServerAdministratorPassword": {
+      "reference": {
+          "keyVault": {
+              "id": "/subscriptions/<subscriptionId>/resourceGroups/<resource group name>/providers/Microsoft.KeyVault/vaults/<keyvault name>"
+          },
+          "secretName": "sqlAdminLoginPassword"
+      }
+  },
     "storageAccountName": {
       "value": "demoservicelogicqa"
     },

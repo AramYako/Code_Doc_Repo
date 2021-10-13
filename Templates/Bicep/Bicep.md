@@ -35,6 +35,8 @@ Azure Powershell
 string
 int
 bool
+object
+array
 ```
 
 ### string interpolation
