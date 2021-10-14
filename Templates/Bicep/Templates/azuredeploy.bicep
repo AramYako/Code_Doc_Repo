@@ -81,7 +81,7 @@ param throughputPolicy string = 'Autoscale'
 @minLength(3)
 @maxLength(24)
 param storageSKU string = 'Standard_RAGRS'
-
+param deployStorageAccount bool = true
 var throughput_Policy = {
   Manual: {
     Throughput: provisionedThroughput
@@ -106,6 +106,16 @@ module appService 'appServiceModule.bicep' = {
 //Module have output, and we can take this value 
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName
 
+
+//If statement
+resource storageAccountDemo 'Microsoft.Storage/storageAccounts@2021-01-01' = if (deployStorageAccount) {
+  name: 'teddybearstorage'
+  location: resourceGroup().location
+  kind: 'StorageV2'
+  sku:{
+     name: 'Standard_LRS'
+  }
+}
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: storageAccountName
