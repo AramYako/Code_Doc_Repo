@@ -117,6 +117,16 @@ resource storageAccountDemo 'Microsoft.Storage/storageAccounts@2021-01-01' = if 
   }
 }
 
+//Lock
+resource lockResource 'Microsoft.Authorization/locks@2016-09-01' = {
+  scope: storageAccountDemo
+  name: 'DontDelete'
+  properties: {
+    level: 'CanNotDelete'
+    notes: 'Prevents deletion of the toy data Cosmos DB account.'
+  }
+}
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: storageAccountName
   location: resourceGroupLocation

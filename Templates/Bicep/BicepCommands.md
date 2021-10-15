@@ -72,3 +72,19 @@ resource sqlServers 'Microsoft.Sql/servers@2020-11-01-preview' = [for sqlServer 
   name: sqlServer.name
 }]
 ```
+
+### Resource data
+```
+- resource.id #Get the resource Id 
+- storageAccount.listKeys().keys[0].value # list key
+```
+
+### Target Scope
+```
+OBS: Default is resourceGroup
+
+- targetScope = 'resourceGroup'
+- targetScope = 'subscription'
+- targetScope = 'managementGroup'
+- targetScope = 'tenant'
+```
