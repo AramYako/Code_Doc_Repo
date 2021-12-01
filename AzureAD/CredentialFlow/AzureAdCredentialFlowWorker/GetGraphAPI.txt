@@ -1,0 +1,2 @@
+curl --location --request GET 'https://graph.microsoft.com/v1.0/groups' \
+--header 'Authorization: <accessToken>

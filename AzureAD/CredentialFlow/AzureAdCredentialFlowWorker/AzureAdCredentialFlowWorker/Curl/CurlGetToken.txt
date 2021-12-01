@@ -1,0 +1,5 @@
+curl --location --request POST 'https://login.microsoftonline.com/<tenantId>/oauth2/v2.0/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'client_id=<clientID>' \
+--data-urlencode 'client_secret=<secret>' \
+--data-urlencode 'grant_type=client_credentials'
